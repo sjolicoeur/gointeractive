@@ -52,7 +52,6 @@ func (s *Screen) Render() error {
 	// loop over lines to erase lines with keep set to false
 	// clear the screen
 	// rewrite the lines
-	//fmt.Print(content)
 	for _, line := range s.lines {
 		fmt.Println(line.content)
 	}
@@ -62,11 +61,8 @@ func (s *Screen) Render() error {
 func (s *Screen) CleanLines() error {
 	// remove all lines set to keep == false
 	// mke this private?
-	//numLines := len(s.lines)
 	var tmpLines []Line
 	for _, line := range s.lines {
-		//fmt.Print("\033[A\033[2K")
-		//fmt.Print("\r\033[2K")
 		if line.keep == true {
 			tmpLines = append(tmpLines, line)
 		}
@@ -94,7 +90,6 @@ func (s *Screen) ClearNamedLayers(layerName string) error {
 	s.Clear()
 	var tmpLines []Line
 	for _, line := range s.lines {
-		//fmt.Print("\r\033[2K")
 		if line.name != layerName {
 			tmpLines = append(tmpLines, line)
 		}
