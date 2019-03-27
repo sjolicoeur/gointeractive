@@ -66,7 +66,7 @@ func (s *Screen) CleanLines() error {
 	var tmpLines []Line
 	for _, line := range s.lines {
 		//fmt.Print("\033[A\033[2K")
-		fmt.Print("\r\033[2K")
+		//fmt.Print("\r\033[2K")
 		if line.keep == true {
 			tmpLines = append(tmpLines, line)
 		}
@@ -91,6 +91,15 @@ func (s *Screen) Clear() error {
 
 func (s *Screen) ClearNamedLayers(layerName string) error {
 	// clear the layers based on a name
+	s.Clear()
+	var tmpLines []Line
+	for _, line := range s.lines {
+		//fmt.Print("\r\033[2K")
+		if line.name != layerName {
+			tmpLines = append(tmpLines, line)
+		}
+	}
+	s.lines = tmpLines
 	return nil
 }
 
