@@ -1,72 +1,108 @@
 package screen
 
 import (
-"fmt"
-
+	"fmt"
 )
 
-type Line struct {
-content string
-keep bool
-}
 
-
-func (line *Line) isBlank() bool {
-return line.content == ""
-
-} 
 
 type Screen struct {
-lines []Line
-keepWhitespace bool
-isATty bool // if true filer escape codes ?
-
+	lines          []Line
+	keepWhitespace bool
+	isATty         bool // if true filer escape codes ?
 }
 
-func (s *Screen) Display( content string, preserveContent bool) error {
-// break content with \n into lines
-// call render?
+func NewScreen() *Screen {
+	lines := []Line{}
+
+	return &Screen{
+		lines: lines,
+		keepWhitespace: false,
+		isATty: true,
+	}
 }
 
+func (s *Screen) Display(content string, preserveContent bool, lineName string) error {
+	// break content with \n into lines
+	// cleanup previous lines
+	s.Clear()
+	// remove lines we do not want to keep
+	s.CleanLines()
+	// call render?
+	line := NewLine(content, preserveContent, lineName)
+	// append new lines to the lines
+	s.lines = append(s.lines, *line)
+	// print lines
+	s.Render()
+	//
+	return nil
+}
 
-func (s *Screen) ShowPrint ( content string) error {
-return s.Display(content, false)
+func (s *Screen) ShowPrint(content string) error {
+	return s.Display(content, false, "")
 }
 
 //
-func (s *Screen) CarvePrint ( content string) error {
-// or call the func carve
-return s.Display(content, true)
+func (s *Screen) CarvePrint(content string) error {
+	// or call the func carve
+	return s.Display(content, true, "")
 }
 
 func (s *Screen) Render() error {
-// loop over lines to erase lines with keep set to false
-// clear the screen
-// rewrite the lines
+	// loop over lines to erase lines with keep set to false
+	// clear the screen
+	// rewrite the lines
+	//fmt.Print(content)
+	for _, line := range s.lines {
+		fmt.Println(line.content)
+	}
+	return nil
 }
 
-func (s *Screen) CleanLines() {
-// remove all lines set to keep == false
-// mke this private?
+func (s *Screen) CleanLines() error {
+	// remove all lines set to keep == false
+	// mke this private?
+	//numLines := len(s.lines)
+	var tmpLines []Line
+	for _, line := range s.lines {
+		//fmt.Print("\033[A\033[2K")
+		fmt.Print("\r\033[2K")
+		if line.keep == true {
+			tmpLines = append(tmpLines, line)
+		}
+	}
+	s.lines = tmpLines
+	return nil
 }
 
 func (s *Screen) RemoveBlankLines() error {
-// loop over lines and remove lines that are blank
+	// loop over lines and remove lines that are blank
+	return nil
 }
 
 func (s *Screen) Clear() error {
-// clear the actual screen so it can be repinted
+	// clear the actual screen so it can be repinted
+	//numLines := len(s.lines)
+	for _, _ = range s.lines {
+		fmt.Print("\033[A\033[2K")
+	}
+	return nil
 }
 
+func (s *Screen) ClearNamedLayers(layerName string) error {
+	// clear the layers based on a name
+	return nil
+}
 
 // ability to insert at line X
-
 
 /*
 
 #!/usr/bin/env python
 
 from __future__ import print_function
+import time
+
 
 for x in range(0, 90):
     print(x);print(" - %s cows" % x )
@@ -74,4 +110,4 @@ for x in range(0, 90):
     print("\033[A\033[2K\033[A\033[2K", end="")
 
 */
-// may have issues with lines that wrap...? 
+// may have issues with lines that wrap...?
