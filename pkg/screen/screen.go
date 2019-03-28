@@ -22,6 +22,13 @@ func NewScreen() *Screen {
 	}
 }
 
+func (s *Screen) InsertLine(content string, name string) error {
+	line := NewLine(content, true, name)
+	// append new lines to the lines
+	s.lines = append(s.lines, *line)
+	return nil
+}
+
 func (s *Screen) Display(content string, preserveContent bool, lineName string) error {
 	// break content with \n into lines
 	// cleanup previous lines

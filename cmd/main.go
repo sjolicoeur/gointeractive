@@ -1,10 +1,20 @@
 package main
 
 import (
-	//"fmt"
-	"github.com/sjolicoeur/gointeractive/pkg/screen"
+	"fmt"
+	"math/rand"
+	"strings"
 	"time"
+
+	"github.com/sjolicoeur/gointeractive/pkg/screen"
 )
+
+var sentences = []string{
+	"Shaving the cat",
+	"Removing lint from the dryer",
+	"baking burgers",
+	"Reading the postits",
+}
 
 func main() {
 	//fmt.Print("\n")
@@ -38,10 +48,36 @@ func main() {
 	time.Sleep(1050 * time.Millisecond)
 
 	screen.Display("z", true, "tmp")
-	time.Sleep(2050 * time.Millisecond)
+	time.Sleep(1050 * time.Millisecond)
 	screen.CarvePrint("Done Loading modules!")
-	time.Sleep(2050 * time.Millisecond)
+	time.Sleep(1050 * time.Millisecond)
+
+
+	//fmt.Println("ba" + strings.Repeat("na", 2))
+	r := rand.New(rand.NewSource(24))
+	for i := 0; i <= 20; i++ {
+		screen.ClearNamedLayers("buff")
+		for _, sentence := range sentences {
+			if i < 20 {
+				dots := strings.Repeat(".", r.Intn(34))
+				newLine := fmt.Sprintf("%-30s %-34s", sentence, dots)
+				//newLine := sentence + strings.Repeat(".", r.Intn(34))
+				screen.InsertLine(newLine, "buff")
+			} else {
+				newLine := fmt.Sprintf("> %-30s...%6s", sentence, "done!")
+				//newLine := sentence + strings.Repeat(".", 10) + " done!"
+				screen.InsertLine(newLine, "buff")
+			}
+		}
+		screen.Render()
+		time.Sleep(250 * time.Millisecond)
+
+	}
+	///
 	screen.ClearNamedLayers("tmp")
+	screen.Render()
+	time.Sleep(1050 * time.Millisecond)
+	screen.ClearNamedLayers("buff")
 	screen.Render()
 	screen.CarvePrint("Goodbye!")
 
