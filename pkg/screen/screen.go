@@ -16,6 +16,7 @@ type Screen struct {
 	au             aurora.Aurora
 }
 
+// NewScreen is a constructor for Screen
 func NewScreen(showColors *bool) *Screen {
 	lines := []Line{}
 	au := aurora.NewAurora(*showColors)

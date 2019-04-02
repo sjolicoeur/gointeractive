@@ -9,6 +9,7 @@ type Line struct {
 	name    string
 }
 
+// NewLine is a constructor for Line
 func NewLine(content string, keep bool, name string) *Line {
 	return &Line{
 		content: content,
