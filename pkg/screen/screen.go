@@ -30,7 +30,7 @@ func NewScreen(showColors *bool) *Screen {
 
 // Clear clears the actual screen so it can be repinted
 func (s *Screen) Clear() {
-	for _, _ = range s.lines {
+	for _ = range s.lines {
 		fmt.Print("\033[A\033[2K")
 	}
 }
@@ -77,6 +77,7 @@ func (s *Screen) CarvePrint(content string) {
 	s.Display(content, true, "")
 }
 
+// CleanLines is to remove lines that are not marked as keep = true
 func (s *Screen) CleanLines() {
 	var tmpLines []Line
 	for _, line := range s.lines {
@@ -87,6 +88,8 @@ func (s *Screen) CleanLines() {
 	s.lines = tmpLines
 }
 
+
+// RemoveBlankLines is a shortcut to remove lines that are blank
 func (s *Screen) RemoveBlankLines() {
 	var tmpLines []Line
 	for _, line := range s.lines {
