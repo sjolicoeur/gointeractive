@@ -3,7 +3,6 @@ package screen
 import (
 	"fmt"
 	"github.com/logrusorgru/aurora"
-	"github.com/sjolicoeur/gointeractive/pkg/formating"
 	"strings"
 )
 
@@ -105,37 +104,56 @@ func (s *Screen) ClearNamedLayers(layerName string) {
 		}
 	}
 	s.lines = tmpLines
-	//return nil
 }
 
+
+// returns the number of lines that are known by screen
 func (s *Screen) NumLines() int {
 	return len(s.lines)
 }
 
-// renders ok formating according to the options set by "nocolor"
+// renders text in green
 func (s *Screen) Ok(text string) string {
-	return formating.Ok(text, s.au)
-}
-func (s *Screen) Warning(text string) string {
-	return formating.Warning(text, s.au)
-}
-func (s *Screen) Critical(text string) string {
-	return formating.Critical(text, s.au)
-}
-func (s *Screen) Bleu(text string) string {
-	return formating.Bleu(text, s.au)
-}
-func (s *Screen) Purple(text string) string {
-	return formating.Purple(text, s.au)
-}
-func (s *Screen) Teal(text string) string {
-	return formating.Teal(text, s.au)
+	return aurora.Sprintf(s.au.Green(text))
 }
 
-//func (s *Screen) Invert(text string, string {
-func (s *Screen) Normal(text string) string {
-	return formating.Normal(text, s.au)
+// renders text in yellow
+func (s *Screen) Warning(text string) string {
+	return aurora.Sprintf(s.au.Brown(text))
 }
+
+// renders text in red
+func (s *Screen) Critical(text string) string {
+	return aurora.Sprintf(s.au.Red(text))
+}
+
+// renders text in green
+func (s *Screen) Bleu(text string) string {
+	return aurora.Sprintf(s.au.Blue(text))
+}
+
+// renders text in purple
+func (s *Screen) Purple(text string) string {
+	return aurora.Sprintf(s.au.Magenta(text))
+}
+
+// renders text in teal color
+func (s *Screen) Teal(text string) string {
+	return aurora.Sprintf(s.au.Cyan(text))
+}
+
+// renders text as normal is a noop
+func (s *Screen) Normal(text string) string {
+	return text
+}
+
+// Emboldens the text
 func (s *Screen) Emphasis(text string) string {
-	return formating.Emphasis(text, s.au)
+	return aurora.Sprintf(s.au.Bold(text))
+}
+
+// Inverts the color of the text
+// practical for when the background color is changed
+func (s *Screen) Invert(text string) string {
+	return aurora.Sprintf(s.au.Inverse(text))
 }
