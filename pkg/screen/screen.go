@@ -6,6 +6,9 @@ import (
 	"strings"
 )
 
+// Screen is the global primitive that keeps track of
+// lines on the screen and allow to operate o them to do
+// things like animations or rendering
 type Screen struct {
 	lines          []Line
 	keepWhitespace bool
@@ -25,21 +28,21 @@ func NewScreen(showColors *bool) *Screen {
 	}
 }
 
-// clear the actual screen so it can be repinted
+// Clear clears the actual screen so it can be repinted
 func (s *Screen) Clear() {
 	for _, _ = range s.lines {
 		fmt.Print("\033[A\033[2K")
 	}
 }
 
-// Renders all lines to the screen
+// Render renders all lines to the screen
 func (s *Screen) Render() {
 	for _, line := range s.lines {
 		fmt.Println(line.content)
 	}
 }
 
-// Adds a line to the screen without rendering or clearing the screen
+// InsertLine adds a line to the screen without rendering or clearing the screen
 func (s *Screen) InsertLine(content string, name string) {
 	//s.Clear()
 	line := NewLine(content, true, name)
@@ -47,7 +50,7 @@ func (s *Screen) InsertLine(content string, name string) {
 	s.lines = append(s.lines, *line)
 }
 
-// Basic call to print a line to the screen.
+// Display is the basic call to print a line to the screen.
 // it allows to set the `keep` flag for the line and to name line
 // successive calls to display will clear lines who have `keep` set to false
 func (s *Screen) Display(content string, preserveContent bool, lineName string) {
@@ -64,12 +67,12 @@ func (s *Screen) Display(content string, preserveContent bool, lineName string) 
 	s.Render()
 }
 
-// Shortcut to an unnamed temporary line
+// ShowPrint is a shortcut to an unnamed temporary line
 func (s *Screen) ShowPrint(content string) {
 	s.Display(content, false, "")
 }
 
-// Shortcut to an unnamed permanent line
+// CarvePrint is a shortcut to an unnamed permanent line
 func (s *Screen) CarvePrint(content string) {
 	s.Display(content, true, "")
 }
@@ -94,8 +97,8 @@ func (s *Screen) RemoveBlankLines() {
 	s.lines = tmpLines
 }
 
+// ClearNamedLayers clears the layers with the specified name
 func (s *Screen) ClearNamedLayers(layerName string) {
-	// clear the layers based on a name
 	s.Clear()
 	var tmpLines []Line
 	for _, line := range s.lines {
@@ -106,52 +109,52 @@ func (s *Screen) ClearNamedLayers(layerName string) {
 	s.lines = tmpLines
 }
 
-// returns the number of lines that are known by screen
+// NumLines returns the number of lines that are known by screen
 func (s *Screen) NumLines() int {
 	return len(s.lines)
 }
 
-// renders text in green
+// Ok renders text in green
 func (s *Screen) Ok(text string) string {
 	return aurora.Sprintf(s.au.Green(text))
 }
 
-// renders text in yellow
+// Warning renders text in yellow
 func (s *Screen) Warning(text string) string {
 	return aurora.Sprintf(s.au.Brown(text))
 }
 
-// renders text in red
+// Critical renders text in red
 func (s *Screen) Critical(text string) string {
 	return aurora.Sprintf(s.au.Red(text))
 }
 
-// renders text in green
+// Bleu renders text in green
 func (s *Screen) Bleu(text string) string {
 	return aurora.Sprintf(s.au.Blue(text))
 }
 
-// renders text in purple
+// Purple renders text in purple
 func (s *Screen) Purple(text string) string {
 	return aurora.Sprintf(s.au.Magenta(text))
 }
 
-// renders text in teal color
+// Teal renders text in teal color
 func (s *Screen) Teal(text string) string {
 	return aurora.Sprintf(s.au.Cyan(text))
 }
 
-// renders text as normal is a noop
+// Normal renders text as normal is a noop
 func (s *Screen) Normal(text string) string {
 	return text
 }
 
-// Emboldens the text
+// Emphasis emboldens the text
 func (s *Screen) Emphasis(text string) string {
 	return aurora.Sprintf(s.au.Bold(text))
 }
 
-// Inverts the color of the text
+// Invert inverts the color of the text
 // practical for when the background color is changed
 func (s *Screen) Invert(text string) string {
 	return aurora.Sprintf(s.au.Inverse(text))
