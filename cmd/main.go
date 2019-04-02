@@ -48,7 +48,16 @@ func main() {
 
 	spinner := NewLoader([]string{"|", "/", "-", "\\"})
 	//loader := NewLoader([]string{"\u2809", "\u2812", "\u2824", "\u28C0", "\u2824", "\u2812",})
-	loaderBraille := NewLoader([]string{"\u2801", "\u2809", "\u2819", "\u281B", "\u281F", "\u283F", "\u28BF", "\u28FF",})
+	loaderBraille := NewLoader([]string{
+		"\u2801",
+		"\u2809",
+		"\u2819",
+		"\u281B",
+		"\u281F",
+		"\u283F",
+		"\u28BF",
+		"\u28FF",
+	})
 	//loader := NewLoader([]string{"\u2800", "\u2836", "\u28FF", "\u2836", "\u2800",})
 	loader := NewLoader([]string{
 		"------",

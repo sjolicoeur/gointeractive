@@ -30,7 +30,7 @@ func NewScreen(showColors *bool) *Screen {
 
 // Clear clears the actual screen so it can be repinted
 func (s *Screen) Clear() {
-	for _ = range s.lines {
+	for range s.lines {
 		fmt.Print("\033[A\033[2K")
 	}
 }
