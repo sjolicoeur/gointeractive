@@ -1,6 +1,6 @@
 package screen
 
-// Struck representing a line on the Screen.
+// Line is a representation of a line on the Screen.
 // `keep` is to indicate if the line should survive calls to clear the screen
 // `name` is to give the line a name so to be able to clear it directly
 type Line struct {

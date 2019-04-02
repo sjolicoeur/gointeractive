@@ -11,6 +11,9 @@ import (
 	//"github.com/sjolicoeur/gointeractive/pkg/formating"
 )
 
+
+// Loader is and example of a stateful asset
+// for animation purposes
 type Loader struct {
 	states      []string
 	currentSate int
@@ -151,16 +154,13 @@ func main() {
 		screen.ClearNamedLayers("buff")
 		screen.InsertLine("loading  "+loaderBraille.Next(), "buff")
 		for _, sentence := range sentences {
-			//randColorFunc := colors[rand.Intn(len(colors))]
 			randFormatFunc := formats[rand.Intn(len(formats))]
 			if i < 90 {
 				dots := strings.Repeat(".", r.Intn(34))
 				newLine := randFormatFunc(fmt.Sprintf("%-30s %-51s", sentence, dots))
-				//newLine := sentence + strings.Repeat(".", r.Intn(34))
 				screen.InsertLine(newLine, "buff")
 			} else {
 				newLine := screen.Emphasis(fmt.Sprintf("> %-30s...%6s", sentence, "done!"))
-				//newLine := sentence + strings.Repeat(".", 10) + " done!"
 				screen.InsertLine(newLine, "buff")
 			}
 		}
@@ -184,17 +184,14 @@ func main() {
 			if i < 140 {
 				dots := strings.Repeat(".", r.Intn(34))
 				newLine := randFormatFunc(randColorFunc(fmt.Sprintf("%-30s %-51s", sentence, dots)))
-				//newLine := sentence + strings.Repeat(".", r.Intn(34))
 				screen.InsertLine(newLine, "buff")
 			} else {
 				newLine := screen.Emphasis(screen.Ok(fmt.Sprintf("> %-30s...%6s", sentence, "done!")))
-				//newLine := sentence + strings.Repeat(".", 10) + " done!"
 				screen.InsertLine(newLine, "buff")
 			}
 		}
 		screen.Render()
 		time.Sleep(50 * time.Millisecond)
-
 	}
 
 	screen.Display("It's time to end the demo.", true, "narration")

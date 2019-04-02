@@ -106,7 +106,6 @@ func (s *Screen) ClearNamedLayers(layerName string) {
 	s.lines = tmpLines
 }
 
-
 // returns the number of lines that are known by screen
 func (s *Screen) NumLines() int {
 	return len(s.lines)
