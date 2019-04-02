@@ -2,72 +2,80 @@ package screen
 
 import (
 	"fmt"
+	"github.com/logrusorgru/aurora"
+	"github.com/sjolicoeur/gointeractive/pkg/formating"
+	"strings"
 )
-
-
 
 type Screen struct {
 	lines          []Line
 	keepWhitespace bool
 	isATty         bool // if true filer escape codes ?
+	au             aurora.Aurora
 }
 
-func NewScreen() *Screen {
+func NewScreen(showColors *bool) *Screen {
 	lines := []Line{}
+	au := aurora.NewAurora(*showColors)
 
 	return &Screen{
-		lines: lines,
+		lines:          lines,
 		keepWhitespace: false,
-		isATty: true,
+		isATty:         true,
+		au:             au,
 	}
 }
 
-func (s *Screen) InsertLine(content string, name string) error {
+// clear the actual screen so it can be repinted
+func (s *Screen) Clear() {
+	for _, _ = range s.lines {
+		fmt.Print("\033[A\033[2K")
+	}
+}
+
+// Renders all lines to the screen
+func (s *Screen) Render() {
+	for _, line := range s.lines {
+		fmt.Println(line.content)
+	}
+}
+
+// Adds a line to the screen without rendering or clearing the screen
+func (s *Screen) InsertLine(content string, name string) {
+	//s.Clear()
 	line := NewLine(content, true, name)
 	// append new lines to the lines
 	s.lines = append(s.lines, *line)
-	return nil
 }
 
-func (s *Screen) Display(content string, preserveContent bool, lineName string) error {
+// Basic call to print a line to the screen.
+// it allows to set the `keep` flag for the line and to name line
+// successive calls to display will clear lines who have `keep` set to false
+func (s *Screen) Display(content string, preserveContent bool, lineName string) {
 	// break content with \n into lines
+	tempLinesArr := strings.Split(content, "\n")
 	// cleanup previous lines
 	s.Clear()
 	// remove lines we do not want to keep
 	s.CleanLines()
-	// call render?
-	line := NewLine(content, preserveContent, lineName)
-	// append new lines to the lines
-	s.lines = append(s.lines, *line)
-	// print lines
-	s.Render()
-	//
-	return nil
-}
-
-func (s *Screen) ShowPrint(content string) error {
-	return s.Display(content, false, "")
-}
-
-//
-func (s *Screen) CarvePrint(content string) error {
-	// or call the func carve
-	return s.Display(content, true, "")
-}
-
-func (s *Screen) Render() error {
-	// loop over lines to erase lines with keep set to false
-	// clear the screen
-	// rewrite the lines
-	for _, line := range s.lines {
-		fmt.Println(line.content)
+	for _, tmpLine := range tempLinesArr {
+		line := NewLine(tmpLine, preserveContent, lineName)
+		s.lines = append(s.lines, *line)
 	}
-	return nil
+	s.Render()
 }
 
-func (s *Screen) CleanLines() error {
-	// remove all lines set to keep == false
-	// mke this private?
+// Shortcut to an unnamed temporary line
+func (s *Screen) ShowPrint(content string) {
+	s.Display(content, false, "")
+}
+
+// Shortcut to an unnamed permanent line
+func (s *Screen) CarvePrint(content string) {
+	s.Display(content, true, "")
+}
+
+func (s *Screen) CleanLines() {
 	var tmpLines []Line
 	for _, line := range s.lines {
 		if line.keep == true {
@@ -75,24 +83,19 @@ func (s *Screen) CleanLines() error {
 		}
 	}
 	s.lines = tmpLines
-	return nil
 }
 
-func (s *Screen) RemoveBlankLines() error {
-	// loop over lines and remove lines that are blank
-	return nil
-}
-
-func (s *Screen) Clear() error {
-	// clear the actual screen so it can be repinted
-	//numLines := len(s.lines)
-	for _, _ = range s.lines {
-		fmt.Print("\033[A\033[2K")
+func (s *Screen) RemoveBlankLines() {
+	var tmpLines []Line
+	for _, line := range s.lines {
+		if line.isBlank() != true {
+			tmpLines = append(tmpLines, line)
+		}
 	}
-	return nil
+	s.lines = tmpLines
 }
 
-func (s *Screen) ClearNamedLayers(layerName string) error {
+func (s *Screen) ClearNamedLayers(layerName string) {
 	// clear the layers based on a name
 	s.Clear()
 	var tmpLines []Line
@@ -102,23 +105,37 @@ func (s *Screen) ClearNamedLayers(layerName string) error {
 		}
 	}
 	s.lines = tmpLines
-	return nil
+	//return nil
 }
 
-// ability to insert at line X
+func (s *Screen) NumLines() int {
+	return len(s.lines)
+}
 
-/*
+// renders ok formating according to the options set by "nocolor"
+func (s *Screen) Ok(text string) string {
+	return formating.Ok(text, s.au)
+}
+func (s *Screen) Warning(text string) string {
+	return formating.Warning(text, s.au)
+}
+func (s *Screen) Critical(text string) string {
+	return formating.Critical(text, s.au)
+}
+func (s *Screen) Bleu(text string) string {
+	return formating.Bleu(text, s.au)
+}
+func (s *Screen) Purple(text string) string {
+	return formating.Purple(text, s.au)
+}
+func (s *Screen) Teal(text string) string {
+	return formating.Teal(text, s.au)
+}
 
-#!/usr/bin/env python
-
-from __future__ import print_function
-import time
-
-
-for x in range(0, 90):
-    print(x);print(" - %s cows" % x )
-    time.sleep(0.1)
-    print("\033[A\033[2K\033[A\033[2K", end="")
-
-*/
-// may have issues with lines that wrap...?
+//func (s *Screen) Invert(text string, string {
+func (s *Screen) Normal(text string) string {
+	return formating.Normal(text, s.au)
+}
+func (s *Screen) Emphasis(text string) string {
+	return formating.Emphasis(text, s.au)
+}

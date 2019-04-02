@@ -1,19 +1,32 @@
 package screen
 
+// Struck representing a line on the Screen.
+// `keep` is to indicate if the line should survive calls to clear the screen
+// `name` is to give the line a name so to be able to clear it directly
 type Line struct {
 	content string
 	keep    bool
-	name    string // so we can delete layers based on name
+	name    string
 }
 
 func NewLine(content string, keep bool, name string) *Line {
 	return &Line{
-		content:content,
-		keep: keep,
-		name:name,
+		content: content,
+		keep:    keep,
+		name:    name,
 	}
 }
 
 func (line *Line) isBlank() bool {
-	return line.content == ""
+	emptyConds := []string{
+		"",
+		"\n",
+		"\r",
+	}
+	for _, cond := range emptyConds {
+		if line.content == cond {
+			return true
+		}
+	}
+	return false
 }
