@@ -1,6 +1,5 @@
 # go-interactive
 
-[![Godoc Reference](https://godoc.org/github.com/sjolicoeur/gointeractive?status.svg)](http://godoc.org/github.com/sjolicoeur/gointeractive)
 [![Go Report Card](https://goreportcard.com/badge/github.com/sjolicoeur/gointeractive)](https://goreportcard.com/report/github.com/sjolicoeur/gointeractive)
 
 Add interaction to boring CLI. Control the output, and animate it!
