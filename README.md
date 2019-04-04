@@ -15,7 +15,7 @@ Add interaction to boring CLI. Control the output, and animate it!
 
 Screen and Line are the base structs.
 
-- Screen is the global primitive that keeps track of lines on the screen and allow to operate o them to do things like animations or rendering
+- Screen is the global primitive that keeps track of lines on the screen and allow to operate on them to do things like animations or rendering
 - Line is a representation of a line on the Screen. `keep` is to indicate if the line should survive calls to clear the screen `name` is to give the line a name so to be able to clear it directly
 
 ### The idea is...
@@ -36,6 +36,12 @@ TBD
 ```
 $ go get github.com/sjolicoeur/gointeractive
 ```
+
+## Missing features
+
+- [ ] Autodection of tty
+- [ ] More examples
+- [ ] Complete the README
 
 ## License
 
